@@ -42,6 +42,31 @@ int compare_name(PERSONNEL_REC* p1, PERSONNEL_REC* p2){
     }
 }
 
+int compare_age(PERSONNEL_REC* p1, PERSONNEL_REC* p2){ 
+    if(p1->age > p2->age){
+        return 1;
+    } else if (p1->age < p2->age){
+        return  -1;
+    } else {
+        return compare_name(p1, p2);
+    }
+}
+
+int compare_salary(PERSONNEL_REC* p1, PERSONNEL_REC* p2)
+{
+    if(p1->salary > p2->salary){
+        return 1;
+    } else if (p1->salary < p2->salary){
+        return  -1;
+    } else {
+        return compare_name(p1, p2);
+    }
+}
+
+PERSONNEL_REC* new_record(char* first_name, char* last_name, char middle_initial, int age, int salary, long id_num){
+    PERSONNEL_REC* record = malloc(sizeof(PERSONNEL_REC));
+    
+}
 
 
 int main(){
