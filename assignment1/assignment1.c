@@ -11,6 +11,13 @@ typedef struct {
     long id_num;
 } PERSONNEL_REC;
 
+typedef struct {
+    PERSONNEL_REC* record;
+    NODE * left, right;
+
+} NODE;
+
+NODE* name_root, age_root, id_root, salary_root;
 
 int compare_id_number(PERSONNEL_REC* p1, PERSONNEL_REC* p2){
     
@@ -103,8 +110,16 @@ PERSONNEL_REC* read_record(){
     return record;
 }
 
+void print_record(PERSONNEL_REC* personnel){
+    printf("This is the personal information about Personnel with ID number %ld: \n", personnel->id_num);
+    printf("First Name: %s \n Last Name: %s \n Middle Initial: %c \n Age: %d \n Salary: %d \n", personnel->first_name, personnel->last_name, personnel->middle_initial, personnel->age, personnel->salary);
+}
+
+void insert_personnel_information(NODE** root, PERSONNEL_REC* record, void (*fun_ptr)(int)){
+
+}
 
 int main(){
-    read_record();
+    print_record(read_record());
     return 0;
 }
