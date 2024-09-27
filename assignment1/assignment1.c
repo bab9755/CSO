@@ -91,14 +91,14 @@ PERSONNEL_REC* read_record(){
     
     while (1){
         printf("Input: ");
-        if(scanf("%99s %99s %c %d %d %ld", last_name, first_name, &middle_initial, &age, &salary, &id_num) != 6){
+        if(scanf("%99s %99s %c %d %d %ld", last_name, first_name, &middle_initial, &age, &salary, &id_num) != 1){
             break;
         }
     }
     PERSONNEL_REC* record = malloc(sizeof(PERSONNEL_REC));
     record = new_record(first_name, last_name, middle_initial, age, salary, id_num);
 
-    printf("You created a new record with first name %99s and id number %ld: ", first_name, id_num);
+    printf("You created a new record with first name %s and id number %ld: ", first_name, id_num);
 
     return record;
 }
