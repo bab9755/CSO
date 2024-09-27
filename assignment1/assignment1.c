@@ -90,6 +90,7 @@ PERSONNEL_REC* read_record(){
     printf("Enter the records in the following order: (first_name last_name, middle_initial age salary id_num): \n");
     
     while (1){
+        printf("Input: ");
         if(scanf("%99s %99s %c %d %d %ld", last_name, first_name, &middle_initial, &age, &salary, &id_num) != 6){
             break;
         }
