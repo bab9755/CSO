@@ -163,6 +163,21 @@ void traverse_and_print_records(NODE* root){
 }
 
 
+void insert_record_in_list(PERSONNEL_REC* record){
+    CELL* new_cell =  malloc(sizeof(CELL));
+    new_cell->record = malloc(sizeof(PERSONNEL_REC));
+    memcpy(new_cell->record, record, sizeof(PERSONNEL_REC));
+    //init the current cell to the head of the list
+    CELL* current = head;
+    while(current->next != head){
+        current = current->next;
+    }
+    new_cell->next = head; //set next of the new cell as the head
+    head->prev = new_cell; //set the prev of the head as the new cell
+    current->next = new_cell; //next of the current is the new cell
+    new_cell->prev = current; //and prev of the new cell is the current node
+}
+
 
 int main(){
     print_record(read_record());
