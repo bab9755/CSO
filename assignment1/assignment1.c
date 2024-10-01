@@ -2,6 +2,8 @@
 #include <stdlib.h> // to use malloc
 #include <string.h> // to use strlen, strcmp, and strcpy
 
+#define FORWARD 0
+#define BACKWARD 1
 typedef struct {
     char* first_name;
     char* last_name;
@@ -20,6 +22,8 @@ typedef struct {
     struct CELL *next, *prev;
     PERSONNEL_REC *record;
 } CELL;
+
+
 
 NODE *name_root, *age_root, *id_root, *salary_root; //the roots of the different trees
 CELL *head = NULL;
@@ -152,13 +156,13 @@ void insert_personnel_information(NODE** root, PERSONNEL_REC* record, int (*fun_
 
 }
 
-void traverse_and_print_records(NODE* root){
-    if(!root || !root->record){ //base case
+void traverse_and_print_records(NODE** root){
+    if(!(*root) || !(*root)->record){ //base case
         return;
     }
-    traverse_and_print_records(root->left); // recursively traverse the left tree
-    print_record(root->record); //print the current record
-    traverse_and_print_records(root->right); //recursively traverse the right tree
+    traverse_and_print_records((*root)->left); // recursively traverse the left tree
+    print_record((*root)->record); //print the current record
+    traverse_and_print_records((*root)->right); //recursively traverse the right tree
 
 }
 
@@ -169,13 +173,51 @@ void insert_record_in_list(PERSONNEL_REC* record){
     memcpy(new_cell->record, record, sizeof(PERSONNEL_REC));
     //init the current cell to the head of the list
     CELL* current = head;
-    while(current->next != head){
+    while(current->next && current->next != head){
         current = current->next;
     }
     new_cell->next = head; //set next of the new cell as the head
     head->prev = new_cell; //set the prev of the head as the new cell
     current->next = new_cell; //next of the current is the new cell
     new_cell->prev = current; //and prev of the new cell is the current node
+}
+
+void insert_from_tree_into_list(NODE** root){
+
+    if(!(*root) || !(*root)->record){ //base case
+        return;
+    }
+    traverse_and_print_records((*root)->left); // recursively traverse the left tree
+    insert_record_in_list((*root)->record); //insert the given record into a tree
+    traverse_and_print_records((*root)->right); //recursively traverse the right tree
+
+}
+
+void print_list(int direction) {
+    if (direction == FORWARD){
+        CELL* current = head;
+        while (current->next && current->next !=head){
+            //print record and continue traversing
+            print_record(current->record);
+            current = current->next;
+        }
+    } else if(direction == BACKWARD){
+        CELL* current = head->prev;
+        while(current->prev && current->prev !=head){ //to go backwards we use the prevs instead of the nexts
+            print_record(current->record);
+            current = current->prev;
+        }
+    }
+}
+
+void print_n_records(int n){
+    CELL* current = head;
+    int counter = n;
+    while (current->next && counter){ //while there is still cells and the counter is not 0
+        print_record(current->record);
+        current = current->next;
+        counter--; //decrement the counter
+    }
 }
 
 
