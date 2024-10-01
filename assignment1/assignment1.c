@@ -13,11 +13,16 @@ typedef struct {
 
 typedef struct {
     PERSONNEL_REC* record;
-    NODE * left, right;
+    struct NODE *left, *right;
 
 } NODE;
+typedef struct {
+    struct CELL *next, *prev;
+    PERSONNEL_REC *record;
+} CELL;
 
-NODE* name_root, age_root, id_root, salary_root;
+NODE *name_root, *age_root, *id_root, *salary_root; //the roots of the different trees
+CELL *head = NULL;
 
 int compare_id_number(PERSONNEL_REC* p1, PERSONNEL_REC* p2){
     
@@ -115,9 +120,49 @@ void print_record(PERSONNEL_REC* personnel){
     printf("First Name: %s \n Last Name: %s \n Middle Initial: %c \n Age: %d \n Salary: %d \n", personnel->first_name, personnel->last_name, personnel->middle_initial, personnel->age, personnel->salary);
 }
 
-void insert_personnel_information(NODE** root, PERSONNEL_REC* record, void (*fun_ptr)(int)){
+void insert_personnel_information(NODE** root, PERSONNEL_REC* record, int (*fun_ptr)(PERSONNEL_REC*, PERSONNEL_REC*)){
+    NODE* node = malloc(sizeof(NODE)); //this is what is being inserted into the tree
+    node->record = malloc(sizeof(PERSONNEL_REC));
+    memcpy(node->record, record, sizeof(PERSONNEL_REC));
+    if (!(*root)){ //if the tree is empty set the new node to the root
+        *root = node;
+        return;
+    }
+    NODE* current_node = malloc(sizeof(NODE)); //we keep a current node variable which is going to be initialized as the root
+    current_node = *root;
+    while (1){
+        if (fun_ptr(current_node->record, node->record)){ //checking if our key is smaller than our current node
+            if(!current_node->left) { //check if the left of the current node is vacant
+                current_node->left = node; //insert our node there and exit
+                return;
+            } else {
+                current_node = current_node->left; //otherwise set that left node as our current node
+            }
+        } else { //otherwise
+            if(!current_node->right) { //check the right and insert the node accordingly or keep the right node as our current node.
+                current_node->right = node;
+                return;
+            } else {
+                current_node = current_node->right;
+            }
+        }
+
+    }
+
 
 }
+
+void traverse_and_print_records(NODE* root){
+    if(!root || !root->record){ //base case
+        return;
+    }
+    traverse_and_print_records(root->left); // recursively traverse the left tree
+    print_record(root->record); //print the current record
+    traverse_and_print_records(root->right); //recursively traverse the right tree
+
+}
+
+
 
 int main(){
     print_record(read_record());
