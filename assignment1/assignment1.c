@@ -4,7 +4,7 @@
 
 #define FORWARD 0
 #define BACKWARD 1
-typedef struct {
+typedef struct  PERSONNEL_REC{
     char* first_name;
     char* last_name;
     char middle_initial;
@@ -13,12 +13,12 @@ typedef struct {
     long id_num;
 } PERSONNEL_REC;
 
-typedef struct {
+typedef struct NODE{
     PERSONNEL_REC* record;
     struct NODE *left, *right;
 
 } NODE;
-typedef struct {
+typedef struct CELL{
     struct CELL *next, *prev;
     PERSONNEL_REC *record;
 } CELL;
@@ -108,15 +108,19 @@ PERSONNEL_REC* read_record(){
     while (1){
         printf("Input: ");
         if(scanf("%99s %99s %c %d %d %ld", last_name, first_name, &middle_initial, &age, &salary, &id_num) != 1){
-            free(last_name);
-            free(first_name);
-            return NULL;
+            if (!last_name || !first_name || !middle_initial || !age || !salary || !id_num){
+                printf("Invalid Entry!\n");
+                return NULL;
+            } else{
+                break;
+            }
+        
         }
     }
     PERSONNEL_REC* record = malloc(sizeof(PERSONNEL_REC));
     record = new_record(first_name, last_name, middle_initial, age, salary, id_num);
 
-    printf("You created a new record with first name %s and id number %ld: ", first_name, id_num);
+    printf("You created a new record with first name %s and id number %ld: \n", first_name, id_num);
 
     return record;
 }
@@ -140,20 +144,21 @@ void insert_personnel_record(NODE** root, PERSONNEL_REC* record, int (*fun_ptr)(
         if (fun_ptr(current_node->record, node->record)){ //checking if our key is smaller than our current node
             if(!current_node->left) { //check if the left of the current node is vacant
                 current_node->left = node; //insert our node there and exit
-                return;
+                break;
             } else {
                 current_node = current_node->left; //otherwise set that left node as our current node
             }
         } else { //otherwise
             if(!current_node->right) { //check the right and insert the node accordingly or keep the right node as our current node.
                 current_node->right = node;
-                return;
+                break;
             } else {
                 current_node = current_node->right;
             }
         }
 
     }
+    printf("added %s to a tree\n", node->record->first_name);
 
 }
 
@@ -161,9 +166,9 @@ void traverse_and_print_records(NODE** root){
     if(!(*root) || !(*root)->record){ //base case
         return;
     }
-    traverse_and_print_records((*root)->left); // recursively traverse the left tree
+    traverse_and_print_records(&((*root)->left)); // recursively traverse the left tree
     print_record((*root)->record); //print the current record
-    traverse_and_print_records((*root)->right); //recursively traverse the right tree
+    traverse_and_print_records(&((*root)->right)); //recursively traverse the right tree
 
 }
 
@@ -188,9 +193,9 @@ void insert_from_tree_into_list(NODE** root){
     if(!(*root) || !(*root)->record){ //base case
         return;
     }
-    traverse_and_print_records((*root)->left); // recursively traverse the left tree
+    traverse_and_print_records(&((*root)->left)); // recursively traverse the left tree
     insert_record_in_list((*root)->record); //insert the given record into a tree
-    traverse_and_print_records((*root)->right); //recursively traverse the right tree
+    traverse_and_print_records(&((*root)->right)); //recursively traverse the right tree
 
 }
 
@@ -225,7 +230,8 @@ void print_n_records(int n){
 int main(){
     while(1) {
         //create a new record from the command line
-        PERSONNEL_REC* record = read_record();
+        PERSONNEL_REC* record = malloc(sizeof(PERSONNEL_REC));
+        record = read_record();
 
         if (!record) {
             printf("No record was saved, exiting the program.\n");
