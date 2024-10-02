@@ -108,7 +108,9 @@ PERSONNEL_REC* read_record(){
     while (1){
         printf("Input: ");
         if(scanf("%99s %99s %c %d %d %ld", last_name, first_name, &middle_initial, &age, &salary, &id_num) != 1){
-            break;
+            free(last_name);
+            free(first_name);
+            return NULL;
         }
     }
     PERSONNEL_REC* record = malloc(sizeof(PERSONNEL_REC));
@@ -124,7 +126,7 @@ void print_record(PERSONNEL_REC* personnel){
     printf("First Name: %s \n Last Name: %s \n Middle Initial: %c \n Age: %d \n Salary: %d \n", personnel->first_name, personnel->last_name, personnel->middle_initial, personnel->age, personnel->salary);
 }
 
-void insert_personnel_information(NODE** root, PERSONNEL_REC* record, int (*fun_ptr)(PERSONNEL_REC*, PERSONNEL_REC*)){
+void insert_personnel_record(NODE** root, PERSONNEL_REC* record, int (*fun_ptr)(PERSONNEL_REC*, PERSONNEL_REC*)){
     NODE* node = malloc(sizeof(NODE)); //this is what is being inserted into the tree
     node->record = malloc(sizeof(PERSONNEL_REC));
     memcpy(node->record, record, sizeof(PERSONNEL_REC));
@@ -152,7 +154,6 @@ void insert_personnel_information(NODE** root, PERSONNEL_REC* record, int (*fun_
         }
 
     }
-
 
 }
 
@@ -222,6 +223,43 @@ void print_n_records(int n){
 
 
 int main(){
-    print_record(read_record());
+    while(1) {
+        //create a new record from the command line
+        PERSONNEL_REC* record = read_record();
+
+        if (!record) {
+            printf("No record was saved, exiting the program.\n");
+            return 0;
+        }
+            
+        //insert into the name tree
+        insert_personnel_record(&name_root, record, compare_name);
+        //insert into age tree
+        insert_personnel_record(&age_root, record, compare_age);
+        //insert into id tree
+        insert_personnel_record(&id_root, record, compare_id_number);
+        //insert into salary tree
+        insert_personnel_record(&salary_root, record, compare_salary);
+
+    }
+        printf("SORTED BY NAME:\n");
+        traverse_and_print_records(&name_root);
+        printf("SORTED BY AGE:\n");
+        traverse_and_print_records(&age_root);
+        printf("SORTED BY ID:\n");
+        traverse_and_print_records(&id_root);
+        printf("SORTED BY SALARY:\n");
+        traverse_and_print_records(&salary_root);
+
+        insert_from_tree_into_list(&name_root);
+
+        printf("Printing list in forward direction:\n");
+        print_list(FORWARD);
+
+        printf("Printing list in backward direction:\n");
+        print_list(BACKWARD);
+
+        printf("Printing 120 records:\n");
+        print_n_records(20);
     return 0;
 }
