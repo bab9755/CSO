@@ -31,11 +31,12 @@ CELL *head = NULL;
 int compare_id_number(PERSONNEL_REC* p1, PERSONNEL_REC* p2){
     
     if (p1->id_num > p2->id_num){
+        printf("%s has higher ID number than %s\n", p1->first_name, p2->first_name);
         return 1;
 
     } else if (p1->id_num < p2->id_num){
         return -1;
-
+        printf("%s has lower ID number than %s\n", p1->first_name, p2->first_name);
     } else {
         return 0;
     }
@@ -44,13 +45,17 @@ int compare_id_number(PERSONNEL_REC* p1, PERSONNEL_REC* p2){
 int compare_name(PERSONNEL_REC* p1, PERSONNEL_REC* p2){
 
     if(strcmp(p1->last_name, p1->last_name) != 0){
+        printf("%s and %s are different\n", p1->last_name, p2->last_name);
         return strcmp(p1->last_name, p1->last_name);
     } else if (strcmp(p1->first_name, p1->first_name) != 0) {
+        printf("%s and %s are different\n", p1->first_name, p2->first_name);
         return strcmp(p1->first_name, p1->first_name);
     } else {
         if (p1->middle_initial > p2->middle_initial){
+            printf("%s with middle initial %c is greater than %s with middle initial %c\n", p1->first_name, p1->middle_initial, p2->first_name, p2->middle_initial);
             return 1;
         } else if (p1->middle_initial < p2->middle_initial) {
+            printf("%s with middle initial %c is smaller than %s with middle initial %c\n", p1->first_name, p1->middle_initial, p2->first_name, p2->middle_initial);
             return -1;
         } else {
             return compare_id_number(p1, p2);
@@ -60,8 +65,10 @@ int compare_name(PERSONNEL_REC* p1, PERSONNEL_REC* p2){
 
 int compare_age(PERSONNEL_REC* p1, PERSONNEL_REC* p2){ 
     if(p1->age > p2->age){
+        printf("%s is older than %s\n", p1->first_name, p2->first_name);
         return 1;
     } else if (p1->age < p2->age){
+        printf("%s is younger than %s\n", p1->first_name, p2->first_name);
         return  -1;
     } else {
         return compare_name(p1, p2);
@@ -71,8 +78,10 @@ int compare_age(PERSONNEL_REC* p1, PERSONNEL_REC* p2){
 int compare_salary(PERSONNEL_REC* p1, PERSONNEL_REC* p2)
 {
     if(p1->salary > p2->salary){
+        printf("%s is richer than %s\n", p1->first_name, p2->first_name);
         return 1;
     } else if (p1->salary < p2->salary){
+        printf("%s is poorer than %s\n", p1->first_name, p2->first_name);
         return  -1;
     } else {
         return compare_name(p1, p2);
@@ -150,7 +159,7 @@ void insert_personnel_record(NODE** root, PERSONNEL_REC* record, int (*fun_ptr)(
     current_node = *root;
     while (1){
         printf("CURRENT NODE IS %s\n", current_node->record->first_name);
-        if (fun_ptr(current_node->record, node->record)){ //checking if our key is smaller than our current node
+        if (fun_ptr(current_node->record, node->record) > 0){ //checking if our key is smaller than our current node
             if(!current_node->left) { //check if the left of the current node is vacant
                 printf("INSERTING %s ON THE LEFT OF %s\n", node->record->first_name, current_node->record->first_name);
                 current_node->left = node; //insert our node there and exit
@@ -158,7 +167,7 @@ void insert_personnel_record(NODE** root, PERSONNEL_REC* record, int (*fun_ptr)(
             } else {
                 current_node = current_node->left; //otherwise set that left node as our current node
             }
-        } else { //otherwise
+        } else if (fun_ptr(current_node->record, node->record) < 0){ // else check if our key is greater than the current ndoe
             if(!current_node->right) { //check the right and insert the node accordingly or keep the right node as our current node.
             printf("INSERTING %s ON THE RIGHT OF %s\n", node->record->first_name, current_node->record->first_name);
                 current_node->right = node;
@@ -220,7 +229,7 @@ void print_list(int direction) {
         }
     } else if(direction == BACKWARD){
         CELL* current = head->prev;
-        while(current->prev && current->prev !=head){ //to go backwards we use the prevs instead of the nexts
+        while(current->prev && current->prev != head){ //to go backwards we use the prevs instead of the nexts
             print_record(current->record);
             current = current->prev;
         }
@@ -245,8 +254,8 @@ int main(){
         record = read_record();
 
         if (!record) {
-            printf("No record was saved, exiting the program.\n");
-            return 0;
+            printf("No record was saved, exiting input entry.\n");
+            break;
         }
             
         //insert into the name tree
