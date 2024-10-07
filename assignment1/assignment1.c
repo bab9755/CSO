@@ -156,6 +156,7 @@ void insert_personnel_record(NODE** root, PERSONNEL_REC* record, int (*fun_ptr)(
         return;
     }
     NODE* current_node = malloc(sizeof(NODE)); //we keep a current node variable which is going to be initialized as the root
+    
     current_node = *root;
     while (1){
         printf("CURRENT NODE IS %s\n", current_node->record->first_name);
@@ -194,18 +195,33 @@ void traverse_and_print_records(NODE** root){
 
 
 void insert_record_in_list(PERSONNEL_REC* record){
+    printf("Currently processing list entry for %s\n", record->first_name);
     CELL* new_cell =  malloc(sizeof(CELL));
     new_cell->record = malloc(sizeof(PERSONNEL_REC));
     memcpy(new_cell->record, record, sizeof(PERSONNEL_REC));
+    
     //init the current cell to the head of the list
-    CELL* current = head;
-    while(current->next && current->next != head){
-        current = current->next;
+
+    
+    
+    
+    if (!head) {
+        new_cell->next = new_cell;
+        new_cell->prev = new_cell;
+        head = new_cell;
+        printf("The head was empty. Setting %s as the head.\n", record->first_name);
+        return;
+    } else {
+
+        CELL* last = head->prev;
+        new_cell->next = head;
+        new_cell->prev = last;
+        last->next = new_cell;
+        head->prev = new_cell;
+        printf("Inserted %s at the end of the list.\n", record->first_name);
+        
     }
-    new_cell->next = head; //set next of the new cell as the head
-    head->prev = new_cell; //set the prev of the head as the new cell
-    current->next = new_cell; //next of the current is the new cell
-    new_cell->prev = current; //and prev of the new cell is the current node
+    
 }
 
 void insert_from_tree_into_list(NODE** root){
@@ -279,6 +295,7 @@ int main(){
         printf("SORTED BY SALARY:\n");
         traverse_and_print_records(&salary_root);
 
+        printf("INSERTING THE RECORDS INTO THE DOUBLY LINKED LIST.\n");
         insert_from_tree_into_list(&name_root);
 
         printf("Printing list in forward direction:\n");
