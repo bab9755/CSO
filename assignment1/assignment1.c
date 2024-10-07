@@ -206,9 +206,9 @@ void insert_record_in_list(PERSONNEL_REC* record){
     
     
     if (!head) {
-        new_cell->next = new_cell;
-        new_cell->prev = new_cell;
         head = new_cell;
+        head->next = head;
+        head->prev = head;
         printf("The head was empty. Setting %s as the head.\n", record->first_name);
         return;
     } else {
@@ -226,40 +226,45 @@ void insert_record_in_list(PERSONNEL_REC* record){
 
 void insert_from_tree_into_list(NODE** root){
 
+
     if(!(*root) || !(*root)->record){ //base case
         return;
     }
-    traverse_and_print_records(&((*root)->left)); // recursively traverse the left tree
+    insert_from_tree_into_list(&((*root)->left)); // recursively traverse the left tree
     insert_record_in_list((*root)->record); //insert the given record into a tree
-    traverse_and_print_records(&((*root)->right)); //recursively traverse the right tree
+    insert_from_tree_into_list(&((*root)->right)); //recursively traverse the right tree
 
 }
 
 void print_list(int direction) {
-    if (direction == FORWARD){
-        CELL* current = head;
-        while (current->next && current->next !=head){
-            //print record and continue traversing
-            print_record(current->record);
-            current = current->next;
-        }
-    } else if(direction == BACKWARD){
-        CELL* current = head->prev;
-        while(current->prev && current->prev != head){ //to go backwards we use the prevs instead of the nexts
-            print_record(current->record);
-            current = current->prev;
-        }
+    
+
+    if (!head) {
+        printf("List is empty.\n");
+        return;
     }
+
+    CELL* current = (direction == FORWARD) ? head : head->prev;
+    do {
+        print_record(current->record);
+        current = (direction == FORWARD) ? current->next : current->prev;
+    } while (current != ((direction == FORWARD) ? head : head->prev));
+    
 }
 
 void print_n_records(int n){
+    if (!head){
+        printf("The list is empty, cannot print records.\n");
+        return;
+    }
     CELL* current = head;
     int counter = n;
-    while (current->next && counter){ //while there is still cells and the counter is not 0
+    do {
         print_record(current->record);
+        counter--;
         current = current->next;
-        counter--; //decrement the counter
-    }
+
+    } while (current != head && counter);
 }
 
 
@@ -273,7 +278,6 @@ int main(){
             printf("No record was saved, exiting input entry.\n");
             break;
         }
-            
         //insert into the name tree
         insert_personnel_record(&name_root, record, compare_name);
         //insert into age tree
@@ -284,27 +288,36 @@ int main(){
         insert_personnel_record(&salary_root, record, compare_salary);
         //free the mememoy to start from scratch at the next iteration of the loop
         free(record);
+        printf("===================================================================\n");
 
     }
         printf("SORTED BY NAME:\n");
         traverse_and_print_records(&name_root);
+        printf("===================================================================\n");
         printf("SORTED BY AGE:\n");
         traverse_and_print_records(&age_root);
+        printf("===================================================================\n");
         printf("SORTED BY ID:\n");
         traverse_and_print_records(&id_root);
+        printf("===================================================================\n");
         printf("SORTED BY SALARY:\n");
         traverse_and_print_records(&salary_root);
+        printf("===================================================================\n");
 
         printf("INSERTING THE RECORDS INTO THE DOUBLY LINKED LIST.\n");
         insert_from_tree_into_list(&name_root);
+        printf("===================================================================\n");
 
-        printf("Printing list in forward direction:\n");
+        printf("PRINTING LIST IN THE FORWARD DIRECTION\n");
         print_list(FORWARD);
+        printf("===================================================================\n");
 
-        printf("Printing list in backward direction:\n");
+        printf("PRINTING LIST IN THE BACKWARD DIRECTION:\n");
         print_list(BACKWARD);
+        printf("===================================================================\n");
 
-        printf("Printing 120 records:\n");
-        print_n_records(20);
+        printf("PRINTING THE FIRST 120 RECORDS\n");
+        print_n_records(120);
+        printf("===================================================================\n");
     return 0;
 }
