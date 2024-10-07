@@ -97,26 +97,25 @@ PERSONNEL_REC* new_record(char* first_name, char* last_name, char middle_initial
 
 
 PERSONNEL_REC* read_record(){
-    char* last_name = malloc(100*sizeof(char));
-    char* first_name = malloc(100*sizeof(char));
+    char* last_name = malloc(10*sizeof(char));
+    char* first_name = malloc(10*sizeof(char));
     char middle_initial;
     int age, salary;
     long id_num;
 
     printf("Enter the records in the following order: (first_name last_name, middle_initial age salary id_num): \n");
     
-    while (1){
-        printf("Input: ");
-        if(scanf("%99s %99s %c %d %d %ld", last_name, first_name, &middle_initial, &age, &salary, &id_num) != 1){
-            if (!last_name || !first_name || !middle_initial || !age || !salary || !id_num){
-                printf("Invalid Entry!\n");
-                return NULL;
-            } else{
-                break;
-            }
-        
-        }
+
+    printf("Input: ");
+
+    int inputs = scanf("%99s %99s %c %d %d %ld", last_name, first_name, &middle_initial, &age, &salary, &id_num);
+    if (inputs != 6){
+        printf("There were one or more missing arguments in your input, stopping to read...\n");
+        return NULL;
     }
+
+
+    
     PERSONNEL_REC* record = malloc(sizeof(PERSONNEL_REC));
     record = new_record(first_name, last_name, middle_initial, age, salary, id_num);
 
@@ -131,18 +130,29 @@ void print_record(PERSONNEL_REC* personnel){
 }
 
 void insert_personnel_record(NODE** root, PERSONNEL_REC* record, int (*fun_ptr)(PERSONNEL_REC*, PERSONNEL_REC*)){
+    if ((*root)){
+        printf("The current root is personenl with name %s\n", (*root)->record->first_name);
+    } else{
+        printf("The current tree is empty\n");
+    }
+    
+    printf("CURRENT ENTIRING THE RECORD FOR %s\n", record->first_name);
+
     NODE* node = malloc(sizeof(NODE)); //this is what is being inserted into the tree
     node->record = malloc(sizeof(PERSONNEL_REC));
     memcpy(node->record, record, sizeof(PERSONNEL_REC));
     if (!(*root)){ //if the tree is empty set the new node to the root
         *root = node;
+        printf("CURRENT RECORD FOR %s SAVED AS ROOT OF THE TREE.\n", (*root)->record->first_name);
         return;
     }
     NODE* current_node = malloc(sizeof(NODE)); //we keep a current node variable which is going to be initialized as the root
     current_node = *root;
     while (1){
+        printf("CURRENT NODE IS %s\n", current_node->record->first_name);
         if (fun_ptr(current_node->record, node->record)){ //checking if our key is smaller than our current node
             if(!current_node->left) { //check if the left of the current node is vacant
+                printf("INSERTING %s ON THE LEFT OF %s\n", node->record->first_name, current_node->record->first_name);
                 current_node->left = node; //insert our node there and exit
                 break;
             } else {
@@ -150,6 +160,7 @@ void insert_personnel_record(NODE** root, PERSONNEL_REC* record, int (*fun_ptr)(
             }
         } else { //otherwise
             if(!current_node->right) { //check the right and insert the node accordingly or keep the right node as our current node.
+            printf("INSERTING %s ON THE RIGHT OF %s\n", node->record->first_name, current_node->record->first_name);
                 current_node->right = node;
                 break;
             } else {
@@ -246,6 +257,8 @@ int main(){
         insert_personnel_record(&id_root, record, compare_id_number);
         //insert into salary tree
         insert_personnel_record(&salary_root, record, compare_salary);
+        //free the mememoy to start from scratch at the next iteration of the loop
+        free(record);
 
     }
         printf("SORTED BY NAME:\n");
