@@ -31,12 +31,12 @@ CELL *head = NULL;
 int compare_id_number(PERSONNEL_REC* p1, PERSONNEL_REC* p2){
     
     if (p1->id_num > p2->id_num){
-        printf("%s has higher ID number than %s\n", p1->first_name, p2->first_name);
+        // printf("%s has higher ID number than %s\n", p1->first_name, p2->first_name);
         return 1;
 
     } else if (p1->id_num < p2->id_num){
         return -1;
-        printf("%s has lower ID number than %s\n", p1->first_name, p2->first_name);
+        // printf("%s has lower ID number than %s\n", p1->first_name, p2->first_name);
     } else {
         return 0;
     }
@@ -44,31 +44,38 @@ int compare_id_number(PERSONNEL_REC* p1, PERSONNEL_REC* p2){
 
 int compare_name(PERSONNEL_REC* p1, PERSONNEL_REC* p2){
 
-    if(strcmp(p1->last_name, p1->last_name) != 0){
-        printf("%s and %s are different\n", p1->last_name, p2->last_name);
-        return strcmp(p1->last_name, p1->last_name);
-    } else if (strcmp(p1->first_name, p1->first_name) != 0) {
-        printf("%s and %s are different\n", p1->first_name, p2->first_name);
-        return strcmp(p1->first_name, p1->first_name);
-    } else {
-        if (p1->middle_initial > p2->middle_initial){
-            printf("%s with middle initial %c is greater than %s with middle initial %c\n", p1->first_name, p1->middle_initial, p2->first_name, p2->middle_initial);
-            return 1;
-        } else if (p1->middle_initial < p2->middle_initial) {
-            printf("%s with middle initial %c is smaller than %s with middle initial %c\n", p1->first_name, p1->middle_initial, p2->first_name, p2->middle_initial);
-            return -1;
-        } else {
-            return compare_id_number(p1, p2);
-        }
+   
+    int last_name_cmp = strcmp(p1->last_name, p2->last_name);
+    if(last_name_cmp != 0){
+        // printf("%s and %s are different\n", p1->last_name, p2->last_name);
+        return last_name_cmp;
     }
+
+    int first_name_cmp = strcmp(p1->first_name, p2->first_name);
+    if (first_name_cmp != 0) {
+        // printf("%s and %s are different\n", p1->first_name, p2->first_name);
+        return first_name_cmp;
+    }
+
+    if (p1->middle_initial > p2->middle_initial){
+        // printf("%s with middle initial %c is greater than %s with middle initial %c\n", p1->first_name, p1->middle_initial, p2->first_name, p2->middle_initial);
+        return 1;
+    } else if (p1->middle_initial < p2->middle_initial) {
+        // printf("%s with middle initial %c is smaller than %s with middle initial %c\n", p1->first_name, p1->middle_initial, p2->first_name, p2->middle_initial);
+        return -1;
+    }
+
+    // If all name components are identical, compare by ID number
+    return compare_id_number(p1, p2);
+
 }
 
 int compare_age(PERSONNEL_REC* p1, PERSONNEL_REC* p2){ 
     if(p1->age > p2->age){
-        printf("%s is older than %s\n", p1->first_name, p2->first_name);
+        // printf("%s is older than %s\n", p1->first_name, p2->first_name);
         return 1;
     } else if (p1->age < p2->age){
-        printf("%s is younger than %s\n", p1->first_name, p2->first_name);
+        // printf("%s is younger than %s\n", p1->first_name, p2->first_name);
         return  -1;
     } else {
         return compare_name(p1, p2);
@@ -78,10 +85,10 @@ int compare_age(PERSONNEL_REC* p1, PERSONNEL_REC* p2){
 int compare_salary(PERSONNEL_REC* p1, PERSONNEL_REC* p2)
 {
     if(p1->salary > p2->salary){
-        printf("%s is richer than %s\n", p1->first_name, p2->first_name);
+        // printf("%s is richer than %s\n", p1->first_name, p2->first_name);
         return 1;
     } else if (p1->salary < p2->salary){
-        printf("%s is poorer than %s\n", p1->first_name, p2->first_name);
+        // printf("%s is poorer than %s\n", p1->first_name, p2->first_name);
         return  -1;
     } else {
         return compare_name(p1, p2);
@@ -128,41 +135,40 @@ PERSONNEL_REC* read_record(){
     PERSONNEL_REC* record = malloc(sizeof(PERSONNEL_REC));
     record = new_record(first_name, last_name, middle_initial, age, salary, id_num);
 
-    printf("You created a new record with first name %s and id number %ld: \n", first_name, id_num);
+    // printf("You created a new record with first name %s and id number %ld: \n", first_name, id_num);
 
     return record;
 }
 
 void print_record(PERSONNEL_REC* personnel){
-    printf("This is the personal information about Personnel with ID number %ld: \n", personnel->id_num);
-    printf("First Name: %s \n Last Name: %s \n Middle Initial: %c \n Age: %d \n Salary: %d \n", personnel->first_name, personnel->last_name, personnel->middle_initial, personnel->age, personnel->salary);
+    printf("%s %s %c %d %d %ld\n", personnel->last_name, personnel->first_name, personnel->middle_initial, personnel->age, personnel->salary, personnel->id_num);
 }
 
 void insert_personnel_record(NODE** root, PERSONNEL_REC* record, int (*fun_ptr)(PERSONNEL_REC*, PERSONNEL_REC*)){
-    if ((*root)){
-        printf("The current root is personenl with name %s\n", (*root)->record->first_name);
-    } else{
-        printf("The current tree is empty\n");
-    }
+    // if ((*root)){
+    //     // printf("The current root is personenl with name %s\n", (*root)->record->first_name);
+    // } else{
+    //     printf("The current tree is empty\n");
+    // }
     
-    printf("CURRENT ENTIRING THE RECORD FOR %s\n", record->first_name);
+    // printf("CURRENT ENTIRING THE RECORD FOR %s\n", record->first_name);
 
     NODE* node = malloc(sizeof(NODE)); //this is what is being inserted into the tree
     node->record = malloc(sizeof(PERSONNEL_REC));
     memcpy(node->record, record, sizeof(PERSONNEL_REC));
     if (!(*root)){ //if the tree is empty set the new node to the root
         *root = node;
-        printf("CURRENT RECORD FOR %s SAVED AS ROOT OF THE TREE.\n", (*root)->record->first_name);
+        // printf("CURRENT RECORD FOR %s SAVED AS ROOT OF THE TREE.\n", (*root)->record->first_name);
         return;
     }
     NODE* current_node = malloc(sizeof(NODE)); //we keep a current node variable which is going to be initialized as the root
     
     current_node = *root;
     while (1){
-        printf("CURRENT NODE IS %s\n", current_node->record->first_name);
-        if (fun_ptr(current_node->record, node->record) > 0){ //checking if our key is smaller than our current node
+        // printf("CURRENT NODE IS %s\n", current_node->record->first_name);
+        if (fun_ptr(current_node->record, node->record) >= 0){ //checking if our key is smaller than our current node
             if(!current_node->left) { //check if the left of the current node is vacant
-                printf("INSERTING %s ON THE LEFT OF %s\n", node->record->first_name, current_node->record->first_name);
+                // printf("INSERTING %s ON THE LEFT OF %s\n", node->record->first_name, current_node->record->first_name);
                 current_node->left = node; //insert our node there and exit
                 break;
             } else {
@@ -170,7 +176,7 @@ void insert_personnel_record(NODE** root, PERSONNEL_REC* record, int (*fun_ptr)(
             }
         } else if (fun_ptr(current_node->record, node->record) < 0){ // else check if our key is greater than the current ndoe
             if(!current_node->right) { //check the right and insert the node accordingly or keep the right node as our current node.
-            printf("INSERTING %s ON THE RIGHT OF %s\n", node->record->first_name, current_node->record->first_name);
+            // printf("INSERTING %s ON THE RIGHT OF %s\n", node->record->first_name, current_node->record->first_name);
                 current_node->right = node;
                 break;
             } else {
@@ -179,7 +185,7 @@ void insert_personnel_record(NODE** root, PERSONNEL_REC* record, int (*fun_ptr)(
         }
 
     }
-    printf("added %s to a tree\n", node->record->first_name);
+    // printf("added %s to a tree\n", node->record->first_name);
 
 }
 
@@ -195,7 +201,7 @@ void traverse_and_print_records(NODE** root){
 
 
 void insert_record_in_list(PERSONNEL_REC* record){
-    printf("Currently processing list entry for %s\n", record->first_name);
+    // printf("Currently processing list entry for %s\n", record->first_name);
     CELL* new_cell =  malloc(sizeof(CELL));
     new_cell->record = malloc(sizeof(PERSONNEL_REC));
     memcpy(new_cell->record, record, sizeof(PERSONNEL_REC));
@@ -203,13 +209,11 @@ void insert_record_in_list(PERSONNEL_REC* record){
     //init the current cell to the head of the list
 
     
-    
-    
     if (!head) {
         head = new_cell;
         head->next = head;
         head->prev = head;
-        printf("The head was empty. Setting %s as the head.\n", record->first_name);
+        // printf("The head was empty. Setting %s as the head.\n", record->first_name);
         return;
     } else {
 
@@ -218,7 +222,7 @@ void insert_record_in_list(PERSONNEL_REC* record){
         new_cell->prev = last;
         last->next = new_cell;
         head->prev = new_cell;
-        printf("Inserted %s at the end of the list.\n", record->first_name);
+        // printf("Inserted %s at the end of the list.\n", record->first_name);
         
     }
     
@@ -240,7 +244,7 @@ void print_list(int direction) {
     
 
     if (!head) {
-        printf("List is empty.\n");
+        // printf("List is empty.\n");
         return;
     }
 
@@ -254,7 +258,7 @@ void print_list(int direction) {
 
 void print_n_records(int n){
     if (!head){
-        printf("The list is empty, cannot print records.\n");
+        // printf("The list is empty, cannot print records.\n");
         return;
     }
     CELL* current = head;
@@ -264,7 +268,7 @@ void print_n_records(int n){
         counter--;
         current = current->next;
 
-    } while (current != head && counter);
+    } while (counter);
 }
 
 
