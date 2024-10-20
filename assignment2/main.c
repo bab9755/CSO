@@ -9,10 +9,10 @@ int main()
      Uncomment the code below in this section once you have written print_bits.
   */
 
-  // int x;
-  // printf("Enter an integer >");
-  // scanf("%d", &x);
-  // print_bits(x);
+   int x;
+   printf("Enter an integer >");
+   scanf("%d", &x);
+   print_bits(x);
 
   /* SECTION 2
      Uncomment the code below in this section once you have written int_multiply.
