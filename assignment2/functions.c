@@ -30,7 +30,38 @@ long int_multiply(long x, long y){
 }
 
 float float_multiply(float a, float b){
-    float val_a = a;
-    float val_b = b;
-    float result = 0;
+    unsigned int val_a = *((unsigned int*) &a); //type cast a into a float and dereference it
+    unsigned int val_b = *((unsigned int*) &b);
+
+    if(val_a == 0 || val_b == 0){
+        return 0.0;
+    }
+    unsigned int exp_a = (val_a >> 23) & 0xFF; //the mask corresponds to  11111111
+    unsigned int mant_a = val_a & 0x007FFFFF; //the mask corresponds to 23 one's
+    unsigned int exp_b = (val_b >> 23) & 0xFF;
+    unsigned int mant_b = val_b & 0x007FFFFF;
+
+    unsigned int exp_result = exp_a + exp_b - 127; //get the exponent for the result
+
+    unsigned int mant_a_with_1 = (mant_a | (1 << 23)); //set the 24th bit to 1
+    unsigned int mant_b_with_1 = (mant_b | (1 << 23));
+    unsigned long mant_result = int_multiply(mant_a_with_1, mant_b_with_1);
+    //shift the result right by 23
+    mant_result >>= 23;
+    if ((mant_result & (1 << 24)) != 0) {
+        mant_result >>= 1;
+        exp_result++;
+    }
+    unsigned int mant_result_32 = (unsigned int)mant_result;
+    //extracting the signs for both a and b
+    unsigned int sign_a = (val_a >> 31) & 1;
+    unsigned int sign_b = (val_b >> 31) & 1;
+    unsigned int sign_result = sign_a ^ sign_b;
+    //get the int result for the float
+    unsigned int result = (sign_result << 31) | (exp_result << 23) | mant_result_32;
+
+
+    return *((float*) &result); //typecase into a float and return
+
+
 }
