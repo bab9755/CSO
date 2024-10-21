@@ -21,11 +21,16 @@ _exponent:
 
 	/* FILL THIS IN */   # use the 32-bit register %eax to hold x^n, initially 1
 	                     # 
+	mov $1, %eax
+
 	
         /* FILL THIS IN */   # use a 32-bit register to hold y^n, initially 1
+	mov $1, %ebx
 	/* FILL THIS IN	*/   # use a 32-bit register to hold i, initially 0
 LOOP_TOP:
+	mov $0, %ecx
         /* FILL THIS IN	*/   # compare i to n (remember, the comparison appears reversed)
+	
         /* FILL THIS IN	*/   # and if i is greater or equal to n, jump to DONE
 
         /* FILL THIS IN	*/   # multiply register holding x^n by x
