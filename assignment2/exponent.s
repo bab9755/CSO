@@ -32,6 +32,7 @@ LOOP_TOP:
         /* FILL THIS IN	*/   # compare i to n (remember, the comparison appears reversed)
 	
         /* FILL THIS IN	*/   # and if i is greater or equal to n, jump to DONE
+	cmp %ecx, %edx
 
         /* FILL THIS IN	*/   # multiply register holding x^n by x
         /* FILL THIS IN	*/   # multiply register holding y^n by y 

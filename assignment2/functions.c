@@ -15,18 +15,35 @@ void print_bits(int x){
     }
 }
 
-long int_multiply(long x, long y){
-    long lx = x;
-    long ly = y;
+long int_multiply(int x, int y){
+   
+
+    long lx = (long)x;
+    long ly = (long)y;
     long result = 0;
-    for(int i = sizeof(long); i >= 0; i--){
-        if(ly & 1){
+
+    for (int i = 0; i < 32; i++) {
+        long mask = (long)1 << i;
+        if ((ly & mask) != 0) {
             result += lx;
         }
         lx <<= 1;
-        ly >>= 1;
     }
+
     return result;
+
+    // long lx = x;
+    // long ly = y;
+    // long result = 0;
+    // for(int i = sizeof(long); i >= 0; i--){
+    //     if(ly & 1){
+    //         result += lx;
+    //     }
+    //     lx <<= 1;
+    //     ly >>= 1;
+    // }
+    // return result;
+
 }
 
 float float_multiply(float a, float b){
@@ -48,7 +65,7 @@ float float_multiply(float a, float b){
     unsigned long mant_result = int_multiply(mant_a_with_1, mant_b_with_1);
     //shift the result right by 23
     mant_result >>= 23;
-    if ((mant_result & (1 << 24)) != 0) {
+    if ((mant_result & (1 << 23)) != 0) {
         mant_result >>= 1;
         exp_result++;
     }
