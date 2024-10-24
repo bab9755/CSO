@@ -13,6 +13,7 @@ void print_bits(int x){
             printf("0"); 
         }
     }
+    printf("\n");
 }
 
 long int_multiply(int x, int y){

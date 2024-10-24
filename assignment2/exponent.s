@@ -38,8 +38,8 @@ LOOP_TOP:
 	jge DONE
         /* FILL THIS IN	*/   # multiply register holding x^n by x
         /* FILL THIS IN	*/   # multiply register holding y^n by y
-	imul %eax, %edi
-	imul %ebx, %esi 
+	imul %edi, %eax
+	imul %esi, %ebx 
         /* FILL THIS IN	*/   # i++
 	inc %ecx
         /* FILL THIS IN	*/   # jump to LOOP_TOP
