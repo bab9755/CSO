@@ -1,3 +1,4 @@
+
 	.section	__TEXT,__text,regular,pure_instructions
 	.globl	_exponent
 	.p2align	4, 0x90
@@ -27,19 +28,25 @@ _exponent:
         /* FILL THIS IN */   # use a 32-bit register to hold y^n, initially 1
 	mov $1, %ebx
 	/* FILL THIS IN	*/   # use a 32-bit register to hold i, initially 0
-LOOP_TOP:
 	mov $0, %ecx
+LOOP_TOP:
+	
         /* FILL THIS IN	*/   # compare i to n (remember, the comparison appears reversed)
 	
         /* FILL THIS IN	*/   # and if i is greater or equal to n, jump to DONE
-	cmp %ecx, %edx
-
+	cmp %edx, %ecx
+	jge DONE
         /* FILL THIS IN	*/   # multiply register holding x^n by x
-        /* FILL THIS IN	*/   # multiply register holding y^n by y 
+        /* FILL THIS IN	*/   # multiply register holding y^n by y
+	imul %eax, %edi
+	imul %ebx, %esi 
         /* FILL THIS IN	*/   # i++
+	inc %ecx
         /* FILL THIS IN	*/   # jump to LOOP_TOP
+	jmp LOOP_TOP
 DONE:
         /* FILL THIS IN	*/   # add y^n to x^n
+		add %ebx, %eax
         		     # Since the result is already in %eax, just leave it there
 
 	popq	%rbp	     # LEAVE THIS ALONE

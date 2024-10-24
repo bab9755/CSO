@@ -62,10 +62,10 @@ float float_multiply(float a, float b){
 
     unsigned int mant_a_with_1 = (mant_a | (1 << 23)); //set the 24th bit to 1
     unsigned int mant_b_with_1 = (mant_b | (1 << 23));
-    unsigned long mant_result = int_multiply(mant_a_with_1, mant_b_with_1);
+    unsigned long mant_result = int_multiply(mant_a_with_1, mant_b_with_1); 
     //shift the result right by 23
     mant_result >>= 23;
-    if ((mant_result & (1 << 23)) != 0) {
+    if ((mant_result & (1 << 24)) != 0) {
         mant_result >>= 1;
         exp_result++;
     }
