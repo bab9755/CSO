@@ -80,6 +80,4 @@ float float_multiply(float a, float b){
 
 
     return *((float*) &result); //typecase into a float and return
-
-
 }
